@@ -12,12 +12,24 @@ class FastTaiwanSolarCrawler {
     private $logFile = 'logs/crawler.log';
     private $delaySeconds = 0.5; // Faster rate limiting
     
-    // Taiwan bounding box - more precise bounds
+    // Taiwan bounding boxes - mainland and outer islands
     private $taiwanBounds = [
-        'minLat' => 21.9,   // Kaohsiung area
-        'maxLat' => 25.3,   // Taipei area
-        'minLng' => 119.5,  // Exclude far western waters
-        'maxLng' => 121.9   // Exclude far eastern waters
+        'mainland' => [
+            'minLat' => 21.9, 'maxLat' => 25.3,
+            'minLng' => 119.5, 'maxLng' => 121.9
+        ],
+        'penghu' => [
+            'minLat' => 23.2, 'maxLat' => 23.8,
+            'minLng' => 119.2, 'maxLng' => 119.9
+        ],
+        'kinmen' => [
+            'minLat' => 24.2, 'maxLat' => 24.6,
+            'minLng' => 118.1, 'maxLng' => 118.6
+        ],
+        'matsu' => [
+            'minLat' => 25.9, 'maxLat' => 26.4,
+            'minLng' => 119.8, 'maxLng' => 120.5
+        ]
     ];
     
     private $allPoints = [];
@@ -88,24 +100,34 @@ class FastTaiwanSolarCrawler {
     }
     
     /**
-     * Generate optimized grid covering Taiwan efficiently
+     * Generate optimized grid covering Taiwan efficiently (mainland + outer islands)
      */
     private function generateOptimizedGrid() {
         $coords = [];
         $step = 0.1; // ~11km spacing for faster coverage
         
-        $this->log("Grid bounds: ({$this->taiwanBounds['minLng']}, {$this->taiwanBounds['minLat']}) to ({$this->taiwanBounds['maxLng']}, {$this->taiwanBounds['maxLat']})");
+        $this->log("Generating grid for Taiwan mainland + outer islands (澎湖, 金門, 馬祖)");
         
-        // Start from bottom-left, move systematically
-        for ($lat = $this->taiwanBounds['minLat']; $lat <= $this->taiwanBounds['maxLat']; $lat += $step) {
-            for ($lng = $this->taiwanBounds['minLng']; $lng <= $this->taiwanBounds['maxLng']; $lng += $step) {
-                $coords[] = [
-                    'lat' => round($lat, 3),
-                    'lng' => round($lng, 3)
-                ];
+        foreach ($this->taiwanBounds as $region => $bounds) {
+            $this->log("Processing region: $region - ({$bounds['minLng']}, {$bounds['minLat']}) to ({$bounds['maxLng']}, {$bounds['maxLat']})");
+            
+            $regionCoords = [];
+            // Generate grid for this region
+            for ($lat = $bounds['minLat']; $lat <= $bounds['maxLat']; $lat += $step) {
+                for ($lng = $bounds['minLng']; $lng <= $bounds['maxLng']; $lng += $step) {
+                    $regionCoords[] = [
+                        'lat' => round($lat, 3),
+                        'lng' => round($lng, 3),
+                        'region' => $region
+                    ];
+                }
             }
+            
+            $this->log("Region $region: " . count($regionCoords) . " grid points");
+            $coords = array_merge($coords, $regionCoords);
         }
         
+        $this->log("Total grid points: " . count($coords) . " (mainland + outer islands)");
         return $coords;
     }
     
@@ -387,9 +409,22 @@ class FastTaiwanSolarCrawler {
             $lng = $coords[0];
             $lat = $coords[1];
             
-            // Calculate which grid this point belongs to
-            $gridLat = floor(($lat - $this->taiwanBounds['minLat']) / $gridStep) * $gridStep + $this->taiwanBounds['minLat'];
-            $gridLng = floor(($lng - $this->taiwanBounds['minLng']) / $gridStep) * $gridStep + $this->taiwanBounds['minLng'];
+            // Calculate which grid this point belongs to (check all regions)
+            $gridLat = null;
+            $gridLng = null;
+            
+            foreach ($this->taiwanBounds as $region => $bounds) {
+                if ($lat >= $bounds['minLat'] && $lat <= $bounds['maxLat'] && 
+                    $lng >= $bounds['minLng'] && $lng <= $bounds['maxLng']) {
+                    $gridLat = floor(($lat - $bounds['minLat']) / $gridStep) * $gridStep + $bounds['minLat'];
+                    $gridLng = floor(($lng - $bounds['minLng']) / $gridStep) * $gridStep + $bounds['minLng'];
+                    break;
+                }
+            }
+            
+            if ($gridLat === null || $gridLng === null) {
+                continue; // Point not in any defined region
+            }
             
             $gridKey = round($gridLat, 3) . ',' . round($gridLng, 3);
             $gridCounts[$gridKey] = ($gridCounts[$gridKey] ?? 0) + 1;

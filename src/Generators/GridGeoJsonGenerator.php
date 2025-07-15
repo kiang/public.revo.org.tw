@@ -1,21 +1,33 @@
 <?php
 /**
- * Generate GeoJSON for the 850 grid points used by taiwan_solar_fast.php
+ * Generate GeoJSON for the 962 grid points used by taiwan_solar_fast.php (mainland + outer islands)
  */
 
 class GridGeoJSONGenerator {
-    private $outputFile = 'data/geojson/taiwan_grid_850.geojson';
+    private $outputFile = 'data/geojson/taiwan_grid_962.geojson';
     
-    // Taiwan bounding box - same as taiwan_solar_fast.php
+    // Taiwan bounding boxes - mainland and outer islands
     private $taiwanBounds = [
-        'minLat' => 21.9,   // Kaohsiung area
-        'maxLat' => 25.3,   // Taipei area
-        'minLng' => 119.5,  // Exclude far western waters
-        'maxLng' => 121.9   // Exclude far eastern waters
+        'mainland' => [
+            'minLat' => 21.9, 'maxLat' => 25.3,
+            'minLng' => 119.5, 'maxLng' => 121.9
+        ],
+        'penghu' => [
+            'minLat' => 23.2, 'maxLat' => 23.8,
+            'minLng' => 119.2, 'maxLng' => 119.9
+        ],
+        'kinmen' => [
+            'minLat' => 24.2, 'maxLat' => 24.6,
+            'minLng' => 118.1, 'maxLng' => 118.6
+        ],
+        'matsu' => [
+            'minLat' => 25.9, 'maxLat' => 26.4,
+            'minLng' => 119.8, 'maxLng' => 120.5
+        ]
     ];
     
     public function generateGridGeoJSON() {
-        echo "Generating GeoJSON for 850 grid points...\n";
+        echo "Generating GeoJSON for Taiwan grid points (mainland + outer islands)...\n";
         
         // Generate the same grid coordinates as taiwan_solar_fast.php
         $gridCoords = $this->generateOptimizedGrid();
@@ -26,10 +38,11 @@ class GridGeoJSONGenerator {
             'type' => 'FeatureCollection',
             'metadata' => [
                 'generated' => date('Y-m-d H:i:s'),
-                'description' => 'Grid points used by taiwan_solar_fast.php crawler',
+                'description' => 'Grid points covering Taiwan mainland + outer islands (澎湖, 金門, 馬祖)',
                 'total_points' => count($gridCoords),
                 'grid_spacing' => '0.1 degrees (~11km)',
                 'search_radius' => '10km per point',
+                'regions' => array_keys($this->taiwanBounds),
                 'bounds' => $this->taiwanBounds
             ],
             'features' => []
@@ -52,6 +65,7 @@ class GridGeoJSONGenerator {
                     'longitude' => $coord['lng'],
                     'search_radius_km' => 10,
                     'grid_id' => "grid_" . ($index + 1),
+                    'region' => $coord['region'] ?? 'mainland',
                     'row' => $this->calculateRow($coord['lat']),
                     'col' => $this->calculateCol($coord['lng'])
                 ]
@@ -73,19 +87,22 @@ class GridGeoJSONGenerator {
     }
     
     /**
-     * Generate optimized grid covering Taiwan efficiently (same as taiwan_solar_fast.php)
+     * Generate optimized grid covering Taiwan efficiently (mainland + outer islands)
      */
     private function generateOptimizedGrid() {
         $coords = [];
         $step = 0.1; // ~11km spacing for faster coverage
         
-        // Start from bottom-left, move systematically
-        for ($lat = $this->taiwanBounds['minLat']; $lat <= $this->taiwanBounds['maxLat']; $lat += $step) {
-            for ($lng = $this->taiwanBounds['minLng']; $lng <= $this->taiwanBounds['maxLng']; $lng += $step) {
-                $coords[] = [
-                    'lat' => round($lat, 3),
-                    'lng' => round($lng, 3)
-                ];
+        foreach ($this->taiwanBounds as $region => $bounds) {
+            // Generate grid for this region
+            for ($lat = $bounds['minLat']; $lat <= $bounds['maxLat']; $lat += $step) {
+                for ($lng = $bounds['minLng']; $lng <= $bounds['maxLng']; $lng += $step) {
+                    $coords[] = [
+                        'lat' => round($lat, 3),
+                        'lng' => round($lng, 3),
+                        'region' => $region
+                    ];
+                }
             }
         }
         
@@ -93,17 +110,17 @@ class GridGeoJSONGenerator {
     }
     
     /**
-     * Calculate row number based on latitude
+     * Calculate row number based on latitude (simplified for multi-region)
      */
     private function calculateRow($lat) {
-        return intval(($lat - $this->taiwanBounds['minLat']) / 0.1) + 1;
+        return intval($lat * 10); // Simple row calculation
     }
     
     /**
-     * Calculate column number based on longitude
+     * Calculate column number based on longitude (simplified for multi-region) 
      */
     private function calculateCol($lng) {
-        return intval(($lng - $this->taiwanBounds['minLng']) / 0.1) + 1;
+        return intval($lng * 10); // Simple col calculation
     }
     
     /**

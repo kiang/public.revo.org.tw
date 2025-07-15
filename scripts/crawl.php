@@ -18,7 +18,7 @@ if ($showHelp) {
     echo "  -u, --update     Update mode: only refetch grids that already have data\n";
     echo "  -h, --help       Show this help message\n\n";
     echo "Examples:\n";
-    echo "  php crawl.php           # Full crawl (all 850 grid points)\n";
+    echo "  php crawl.php           # Full crawl (962 grid points: mainland + 澎湖/金門/馬祖)\n";
     echo "  php crawl.php --update  # Update existing data only\n\n";
     exit(0);
 }
@@ -33,7 +33,7 @@ echo "Starting Taiwan Solar Power Plant Crawler...\n";
 if ($updateMode) {
     echo "MODE: UPDATE ONLY - Refetching grids with existing data\n";
 } else {
-    echo "MODE: FULL CRAWL - Scanning all 850 grid points\n";
+    echo "MODE: FULL CRAWL - Scanning 962 grid points (mainland + outer islands)\n";
 }
 echo "\nConfiguration:\n";
 echo "- Grid spacing: {$config['crawler']['grid_spacing']}° (~11km)\n";
