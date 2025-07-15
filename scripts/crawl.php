@@ -6,15 +6,36 @@
 
 require_once __DIR__ . '/../src/Crawlers/TaiwanSolarCrawler.php';
 
+// Parse command line arguments
+$options = getopt('uh', ['update', 'help']);
+$updateMode = isset($options['u']) || isset($options['update']);
+$showHelp = isset($options['h']) || isset($options['help']);
+
+if ($showHelp) {
+    echo "Taiwan Solar Power Plant Crawler\n\n";
+    echo "Usage: php crawl.php [OPTIONS]\n\n";
+    echo "Options:\n";
+    echo "  -u, --update     Update mode: only refetch grids that already have data\n";
+    echo "  -h, --help       Show this help message\n\n";
+    echo "Examples:\n";
+    echo "  php crawl.php           # Full crawl (all 850 grid points)\n";
+    echo "  php crawl.php --update  # Update existing data only\n\n";
+    exit(0);
+}
+
 // Load configuration
 $config = require __DIR__ . '/../config/config.php';
 
-// Update paths in crawler to use config values
-$crawler = new FastTaiwanSolarCrawler();
+// Initialize crawler with update mode
+$crawler = new FastTaiwanSolarCrawler($updateMode);
 
 echo "Starting Taiwan Solar Power Plant Crawler...\n";
-echo "Configuration:\n";
-echo "- Grid points: 850\n";
+if ($updateMode) {
+    echo "MODE: UPDATE ONLY - Refetching grids with existing data\n";
+} else {
+    echo "MODE: FULL CRAWL - Scanning all 850 grid points\n";
+}
+echo "\nConfiguration:\n";
 echo "- Grid spacing: {$config['crawler']['grid_spacing']}° (~11km)\n";
 echo "- Search radius: " . ($config['crawler']['search_radius'] / 1000) . "km\n";
 echo "- Delay between requests: {$config['crawler']['delay_seconds']}s\n";

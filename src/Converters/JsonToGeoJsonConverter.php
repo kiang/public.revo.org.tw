@@ -4,8 +4,8 @@
  */
 
 class SolarToGeoJSON {
-    private $inputFile = 'taiwan_solar_all.json';
-    private $outputFile = 'taiwan_solar_all.geojson';
+    private $inputFile = 'data/raw/taiwan_solar_all.json';
+    private $outputFile = 'data/geojson/taiwan_solar_all.geojson';
     
     public function convert() {
         echo "Converting {$this->inputFile} to GeoJSON format...\n";

@@ -4,7 +4,7 @@
  */
 
 class GridGeoJSONGenerator {
-    private $outputFile = 'taiwan_grid_850.geojson';
+    private $outputFile = 'data/geojson/taiwan_grid_850.geojson';
     
     // Taiwan bounding box - same as taiwan_solar_fast.php
     private $taiwanBounds = [
@@ -143,7 +143,7 @@ class GridGeoJSONGenerator {
     /**
      * Generate additional circle polygons showing search radius for each point
      */
-    public function generateSearchRadiusGeoJSON($outputFile = 'taiwan_grid_search_circles.geojson') {
+    public function generateSearchRadiusGeoJSON($outputFile = 'data/geojson/taiwan_grid_search_circles.geojson') {
         echo "Generating search radius circles GeoJSON...\n";
         
         $gridCoords = $this->generateOptimizedGrid();

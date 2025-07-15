@@ -7,9 +7,9 @@
 class FastTaiwanSolarCrawler {
     private $apiUrl = 'https://public.revo.org.tw/GraphicAPI/api/Point';
     private $preRequestUrl = 'https://public.revo.org.tw/GraphicAPI/api/Point/GetOnePointByQuery';
-    private $dataFile = 'taiwan_solar_all.json';
-    private $csvFile = 'taiwan_solar_all.csv';
-    private $logFile = 'fast_crawler.log';
+    private $dataFile = 'data/raw/taiwan_solar_all.json';
+    private $csvFile = 'data/processed/taiwan_solar_all.csv';
+    private $logFile = 'logs/crawler.log';
     private $delaySeconds = 0.5; // Faster rate limiting
     
     // Taiwan bounding box - more precise bounds
@@ -22,9 +22,12 @@ class FastTaiwanSolarCrawler {
     
     private $allPoints = [];
     private $processedAreas = [];
+    private $updateMode = false;
+    private $populatedGrids = [];
     
-    public function __construct() {
-        $this->log("Fast Taiwan Solar Crawler initialized");
+    public function __construct($updateMode = false) {
+        $this->updateMode = $updateMode;
+        $this->log("Fast Taiwan Solar Crawler initialized" . ($updateMode ? " (UPDATE MODE)" : ""));
     }
     
     /**
@@ -34,8 +37,21 @@ class FastTaiwanSolarCrawler {
         $this->log("Starting fast crawl process");
         $this->loadExistingData();
         
+        // In update mode, identify grids that already have data
+        if ($this->updateMode) {
+            $this->identifyPopulatedGrids();
+        }
+        
         // Use larger grid with overlapping coverage
         $gridCoords = $this->generateOptimizedGrid();
+        
+        // Filter grids if in update mode
+        if ($this->updateMode && !empty($this->populatedGrids)) {
+            $originalCount = count($gridCoords);
+            $gridCoords = $this->filterGridsForUpdate($gridCoords);
+            $this->log("Update mode: Filtering from $originalCount to " . count($gridCoords) . " grids with existing data");
+        }
+        
         $this->log("Generated " . count($gridCoords) . " optimized grid points");
         
         $totalNewPoints = 0;
@@ -120,8 +136,8 @@ class FastTaiwanSolarCrawler {
             CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_TIMEOUT => 15,
-            CURLOPT_COOKIEJAR => 'fast_cookies.txt',
-            CURLOPT_COOKIEFILE => 'fast_cookies.txt'
+            CURLOPT_COOKIEJAR => 'cache/cookies.txt',
+            CURLOPT_COOKIEFILE => 'cache/cookies.txt'
         ]);
         
         $response = curl_exec($ch);
@@ -161,8 +177,8 @@ class FastTaiwanSolarCrawler {
             CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_TIMEOUT => 15,
-            CURLOPT_COOKIEJAR => 'fast_cookies.txt',
-            CURLOPT_COOKIEFILE => 'fast_cookies.txt'
+            CURLOPT_COOKIEJAR => 'cache/cookies.txt',
+            CURLOPT_COOKIEFILE => 'cache/cookies.txt'
         ]);
         
         $response = curl_exec($ch);
@@ -345,6 +361,70 @@ class FastTaiwanSolarCrawler {
     }
     
     /**
+     * Identify grid blocks that already have data from existing GeoJSON
+     */
+    private function identifyPopulatedGrids() {
+        $geojsonFile = 'data/geojson/taiwan_solar_all.geojson';
+        
+        if (!file_exists($geojsonFile)) {
+            $this->log("No existing GeoJSON file found for update mode");
+            return;
+        }
+        
+        $this->log("Analyzing existing GeoJSON to identify populated grids...");
+        
+        $geojson = json_decode(file_get_contents($geojsonFile), true);
+        if (!$geojson || !isset($geojson['features'])) {
+            $this->log("Invalid GeoJSON format");
+            return;
+        }
+        
+        $gridStep = 0.1;
+        $gridCounts = [];
+        
+        foreach ($geojson['features'] as $feature) {
+            $coords = $feature['geometry']['coordinates'];
+            $lng = $coords[0];
+            $lat = $coords[1];
+            
+            // Calculate which grid this point belongs to
+            $gridLat = floor(($lat - $this->taiwanBounds['minLat']) / $gridStep) * $gridStep + $this->taiwanBounds['minLat'];
+            $gridLng = floor(($lng - $this->taiwanBounds['minLng']) / $gridStep) * $gridStep + $this->taiwanBounds['minLng'];
+            
+            $gridKey = round($gridLat, 3) . ',' . round($gridLng, 3);
+            $gridCounts[$gridKey] = ($gridCounts[$gridKey] ?? 0) + 1;
+        }
+        
+        $this->populatedGrids = array_keys($gridCounts);
+        $this->log("Found " . count($this->populatedGrids) . " populated grid blocks with data");
+        
+        // Show top grids by installation count
+        arsort($gridCounts);
+        $this->log("Top 5 grids by installation count:");
+        $count = 0;
+        foreach ($gridCounts as $gridKey => $installations) {
+            if ($count++ >= 5) break;
+            $this->log("  Grid $gridKey: $installations installations");
+        }
+    }
+    
+    /**
+     * Filter grid coordinates to only include those with existing data
+     */
+    private function filterGridsForUpdate($gridCoords) {
+        $filteredGrids = [];
+        
+        foreach ($gridCoords as $coord) {
+            $gridKey = $coord['lat'] . ',' . $coord['lng'];
+            if (in_array($gridKey, $this->populatedGrids)) {
+                $filteredGrids[] = $coord;
+            }
+        }
+        
+        return $filteredGrids;
+    }
+    
+    /**
      * Log message
      */
     private function log($message) {
@@ -356,8 +436,4 @@ class FastTaiwanSolarCrawler {
     }
 }
 
-// CLI usage
-if (php_sapi_name() === 'cli') {
-    $crawler = new FastTaiwanSolarCrawler();
-    $crawler->crawl();
-}
+// Note: CLI usage is now handled by scripts/crawl.php
