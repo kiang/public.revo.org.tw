@@ -1,11 +1,31 @@
 {
-    "timestamp": "2025-07-15 01:25:17",
-    "total_points": 5345,
+    "timestamp": "2025-09-24 07:14:19",
+    "total_points": 5349,
     "grid_bounds": {
-        "minLat": 21.9,
-        "maxLat": 25.3,
-        "minLng": 119.5,
-        "maxLng": 121.9
+        "mainland": {
+            "minLat": 21.9,
+            "maxLat": 25.3,
+            "minLng": 119.5,
+            "maxLng": 121.9
+        },
+        "penghu": {
+            "minLat": 23.2,
+            "maxLat": 23.8,
+            "minLng": 119.2,
+            "maxLng": 119.9
+        },
+        "kinmen": {
+            "minLat": 24.2,
+            "maxLat": 24.6,
+            "minLng": 118.1,
+            "maxLng": 118.6
+        },
+        "matsu": {
+            "minLat": 25.9,
+            "maxLat": 26.4,
+            "minLng": 119.8,
+            "maxLng": 120.5
+        }
     },
     "points": [
         {
@@ -128287,6 +128307,102 @@
             "seq": 1042779,
             "x": "121.411967",
             "y": "25.022345"
+        },
+        {
+            "pointId": 741715,
+            "id": "W_W03_0081_0027-0021",
+            "name": "金門縣金城鎮水頭段0027-0021地號",
+            "countryId": 20,
+            "townId": 352,
+            "village": null,
+            "neighborhood": null,
+            "region": 14248,
+            "address": "0027-0021",
+            "groupContent": [
+                {
+                    "key": "107PV0182",
+                    "value": "{\"設置者名稱\":\"台灣電力股份有限公司\",\"案件狀態\":\"商轉中\",\"再生能源類別\":\"太陽光電(PV)\",\"設備型別\":\"第一型\",\"設置位置\":\"屋頂型\",\"商轉容量\":\"216.00000\"}"
+                }
+            ],
+            "contentJson": null,
+            "categoryId": "REVO_PV",
+            "dTypeId": 5,
+            "coordSysId": "EPSG3857",
+            "seq": 741715,
+            "x": "118.281880",
+            "y": "24.413759"
+        },
+        {
+            "pointId": 741716,
+            "id": "W_W03_0081_0027-0003",
+            "name": "金門縣金城鎮水頭段0027-0003地號",
+            "countryId": 20,
+            "townId": 352,
+            "village": null,
+            "neighborhood": null,
+            "region": 14248,
+            "address": "0027-0003",
+            "groupContent": [
+                {
+                    "key": "107PV0182",
+                    "value": "{\"設置者名稱\":\"台灣電力股份有限公司\",\"案件狀態\":\"商轉中\",\"再生能源類別\":\"太陽光電(PV)\",\"設備型別\":\"第一型\",\"設置位置\":\"屋頂型\",\"商轉容量\":\"216.00000\"}"
+                }
+            ],
+            "contentJson": null,
+            "categoryId": "REVO_PV",
+            "dTypeId": 5,
+            "coordSysId": "EPSG3857",
+            "seq": 741716,
+            "x": "118.280772",
+            "y": "24.413463"
+        },
+        {
+            "pointId": 741717,
+            "id": "W_W03_0081_0027-0022",
+            "name": "金門縣金城鎮水頭段0027-0022地號",
+            "countryId": 20,
+            "townId": 352,
+            "village": null,
+            "neighborhood": null,
+            "region": 14248,
+            "address": "0027-0022",
+            "groupContent": [
+                {
+                    "key": "107PV0182",
+                    "value": "{\"設置者名稱\":\"台灣電力股份有限公司\",\"案件狀態\":\"商轉中\",\"再生能源類別\":\"太陽光電(PV)\",\"設備型別\":\"第一型\",\"設置位置\":\"屋頂型\",\"商轉容量\":\"216.00000\"}"
+                }
+            ],
+            "contentJson": null,
+            "categoryId": "REVO_PV",
+            "dTypeId": 5,
+            "coordSysId": "EPSG3857",
+            "seq": 741717,
+            "x": "118.280850",
+            "y": "24.414862"
+        },
+        {
+            "pointId": 741718,
+            "id": "W_W03_0081_0027-0022",
+            "name": "金門縣金城鎮水頭段0027-0022地號",
+            "countryId": 20,
+            "townId": 352,
+            "village": null,
+            "neighborhood": null,
+            "region": 14248,
+            "address": "0027-0022",
+            "groupContent": [
+                {
+                    "key": "107PV0182",
+                    "value": "{\"設置者名稱\":\"台灣電力股份有限公司\",\"案件狀態\":\"商轉中\",\"再生能源類別\":\"太陽光電(PV)\",\"設備型別\":\"第一型\",\"設置位置\":\"屋頂型\",\"商轉容量\":\"216.00000\"}"
+                }
+            ],
+            "contentJson": null,
+            "categoryId": "REVO_PV",
+            "dTypeId": 5,
+            "coordSysId": "EPSG3857",
+            "seq": 741718,
+            "x": "118.280850",
+            "y": "24.414862"
         }
     ]
 }

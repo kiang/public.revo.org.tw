@@ -1,10 +1,10 @@
 {
     "type": "FeatureCollection",
     "metadata": {
-        "generated": "2025-06-29 08:04:38",
-        "total_installations": 5345,
+        "generated": "2025-09-24 07:15:58",
+        "total_installations": 5349,
         "source": "REVO GraphicAPI",
-        "original_timestamp": "2025-06-29 08:04:02"
+        "original_timestamp": "2025-09-24 07:14:19"
     },
     "features": [
         {
@@ -197768,6 +197768,154 @@
                     {
                         "key": "111PV0048",
                         "value": "{\"設置者名稱\":\"同陽能源股份有限公司\",\"案件狀態\":\"商轉中\",\"再生能源類別\":\"太陽光電(PV)\",\"設備型別\":\"第一型\",\"設置位置\":\"屋頂型\",\"商轉容量\":\"3599.64000\"}"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    118.28188,
+                    24.413759
+                ]
+            },
+            "properties": {
+                "pointId": 741715,
+                "id": "W_W03_0081_0027-0021",
+                "name": "金門縣金城鎮水頭段0027-0021地號",
+                "address": "0027-0021",
+                "countryId": 20,
+                "townId": 352,
+                "village": null,
+                "neighborhood": null,
+                "region": 14248,
+                "categoryId": "REVO_PV",
+                "dTypeId": 5,
+                "coordSysId": "EPSG3857",
+                "seq": 741715,
+                "installer_name": "台灣電力股份有限公司",
+                "status": "商轉中",
+                "renewable_type": "太陽光電(PV)",
+                "equipment_type": "第一型",
+                "location_type": "屋頂型",
+                "capacity_kw": 216,
+                "original_group_content": [
+                    {
+                        "key": "107PV0182",
+                        "value": "{\"設置者名稱\":\"台灣電力股份有限公司\",\"案件狀態\":\"商轉中\",\"再生能源類別\":\"太陽光電(PV)\",\"設備型別\":\"第一型\",\"設置位置\":\"屋頂型\",\"商轉容量\":\"216.00000\"}"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    118.280772,
+                    24.413463
+                ]
+            },
+            "properties": {
+                "pointId": 741716,
+                "id": "W_W03_0081_0027-0003",
+                "name": "金門縣金城鎮水頭段0027-0003地號",
+                "address": "0027-0003",
+                "countryId": 20,
+                "townId": 352,
+                "village": null,
+                "neighborhood": null,
+                "region": 14248,
+                "categoryId": "REVO_PV",
+                "dTypeId": 5,
+                "coordSysId": "EPSG3857",
+                "seq": 741716,
+                "installer_name": "台灣電力股份有限公司",
+                "status": "商轉中",
+                "renewable_type": "太陽光電(PV)",
+                "equipment_type": "第一型",
+                "location_type": "屋頂型",
+                "capacity_kw": 216,
+                "original_group_content": [
+                    {
+                        "key": "107PV0182",
+                        "value": "{\"設置者名稱\":\"台灣電力股份有限公司\",\"案件狀態\":\"商轉中\",\"再生能源類別\":\"太陽光電(PV)\",\"設備型別\":\"第一型\",\"設置位置\":\"屋頂型\",\"商轉容量\":\"216.00000\"}"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    118.28085,
+                    24.414862
+                ]
+            },
+            "properties": {
+                "pointId": 741717,
+                "id": "W_W03_0081_0027-0022",
+                "name": "金門縣金城鎮水頭段0027-0022地號",
+                "address": "0027-0022",
+                "countryId": 20,
+                "townId": 352,
+                "village": null,
+                "neighborhood": null,
+                "region": 14248,
+                "categoryId": "REVO_PV",
+                "dTypeId": 5,
+                "coordSysId": "EPSG3857",
+                "seq": 741717,
+                "installer_name": "台灣電力股份有限公司",
+                "status": "商轉中",
+                "renewable_type": "太陽光電(PV)",
+                "equipment_type": "第一型",
+                "location_type": "屋頂型",
+                "capacity_kw": 216,
+                "original_group_content": [
+                    {
+                        "key": "107PV0182",
+                        "value": "{\"設置者名稱\":\"台灣電力股份有限公司\",\"案件狀態\":\"商轉中\",\"再生能源類別\":\"太陽光電(PV)\",\"設備型別\":\"第一型\",\"設置位置\":\"屋頂型\",\"商轉容量\":\"216.00000\"}"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    118.28085,
+                    24.414862
+                ]
+            },
+            "properties": {
+                "pointId": 741718,
+                "id": "W_W03_0081_0027-0022",
+                "name": "金門縣金城鎮水頭段0027-0022地號",
+                "address": "0027-0022",
+                "countryId": 20,
+                "townId": 352,
+                "village": null,
+                "neighborhood": null,
+                "region": 14248,
+                "categoryId": "REVO_PV",
+                "dTypeId": 5,
+                "coordSysId": "EPSG3857",
+                "seq": 741718,
+                "installer_name": "台灣電力股份有限公司",
+                "status": "商轉中",
+                "renewable_type": "太陽光電(PV)",
+                "equipment_type": "第一型",
+                "location_type": "屋頂型",
+                "capacity_kw": 216,
+                "original_group_content": [
+                    {
+                        "key": "107PV0182",
+                        "value": "{\"設置者名稱\":\"台灣電力股份有限公司\",\"案件狀態\":\"商轉中\",\"再生能源類別\":\"太陽光電(PV)\",\"設備型別\":\"第一型\",\"設置位置\":\"屋頂型\",\"商轉容量\":\"216.00000\"}"
                     }
                 ]
             }
